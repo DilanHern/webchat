@@ -4,7 +4,6 @@ import mongoose from 'mongoose'; //dependencia utilizada para la base de datos m
 import { Server } from 'socket.io' //se importa solo server del modulo, no todo el modulo
 import { createServer } from 'node:http'
 import dotenv from 'dotenv';
-import helmet from 'helmet';
 
 dotenv.config(); // Cargar variables de entorno desde el archivo .env
 
@@ -21,29 +20,6 @@ const io = new Server(server, {
 //le pasamos "server" para integrar el servidor Socket.io con el servidor http
 
 app.use(logger('dev')) //usamos el logger morgan con el formato dev para registrar solicitudes
-
-// Configurar Content Security Policy (CSP) con helmet
-app.use(helmet({
-    contentSecurityPolicy: {
-        directives: {
-            defaultSrc: ["'self'"],
-            scriptSrc: ["'self'", "https://vercel.live"],
-            scriptSrcElem: ["'self'", "https://vercel.live"],
-            connectSrc: ["'self'", "https://vercel.live"],
-            imgSrc: ["'self'", "data:"],
-            styleSrc: ["'self'", "'unsafe-inline'"],
-            fontSrc: ["'self'", "https://fonts.gstatic.com"],
-            objectSrc: ["'none'"],
-            upgradeInsecureRequests: [],
-        },
-    },
-}));
-
-app.use(
-    helmet({
-      contentSecurityPolicy: false,
-    })
-  );
 
 // Conectar el servidor a MongoDB
 const mongoUri = process.env.MONGODB_URI;
