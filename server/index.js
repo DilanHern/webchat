@@ -8,6 +8,20 @@ import helmet from 'helmet';
 
 dotenv.config(); // Cargar variables de entorno desde el archivo .env
 
+const port = process.env.PORT ?? 3000 //tomar el valor de la variable de entorno PORT, si no hay, el puerto será el 3000(normalmente utilizado para desarrollo)
+
+const app = express() //creamos la aplicacion express quien maneja las rutas, el middleware y configuraciones necesarias para manejar solicitudes http
+const server = createServer(app) //creamos "server" que representa un servidor http creado a partir de la app Express, maneja las conexiones y solicitudes de red (http y websocket).
+//Debemos pasarle "app" para integrar la logica de rutas y middleware con el servidor http
+
+//io se utiliza para manejar eventos globales relacionados con el servidor
+const io = new Server(server, {
+    connectionStateRecovery: {} //
+}) //Creamos "io" que representa el servidor de socket.io que maneja las conexiones Websocket y todas las conexiones entre cliente y servidor
+//le pasamos "server" para integrar el servidor Socket.io con el servidor http
+
+app.use(logger('dev')) //usamos el logger morgan con el formato dev para registrar solicitudes
+
 // Configurar Content Security Policy (CSP) con helmet
 app.use(helmet({
     contentSecurityPolicy: {
@@ -23,20 +37,6 @@ app.use(helmet({
         },
     },
 }));
-
-const port = process.env.PORT ?? 3000 //tomar el valor de la variable de entorno PORT, si no hay, el puerto será el 3000(normalmente utilizado para desarrollo)
-
-const app = express() //creamos la aplicacion express quien maneja las rutas, el middleware y configuraciones necesarias para manejar solicitudes http
-const server = createServer(app) //creamos "server" que representa un servidor http creado a partir de la app Express, maneja las conexiones y solicitudes de red (http y websocket).
-//Debemos pasarle "app" para integrar la logica de rutas y middleware con el servidor http
-
-//io se utiliza para manejar eventos globales relacionados con el servidor
-const io = new Server(server, {
-    connectionStateRecovery: {} //
-}) //Creamos "io" que representa el servidor de socket.io que maneja las conexiones Websocket y todas las conexiones entre cliente y servidor
-//le pasamos "server" para integrar el servidor Socket.io con el servidor http
-
-app.use(logger('dev')) //usamos el logger morgan con el formato dev para registrar solicitudes
 
 // Conectar el servidor a MongoDB
 const mongoUri = process.env.MONGODB_URI;
