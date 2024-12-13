@@ -4,14 +4,8 @@ import mongoose from 'mongoose'; //dependencia utilizada para la base de datos m
 import { Server } from 'socket.io' //se importa solo server del modulo, no todo el modulo
 import { createServer } from 'node:http'
 import dotenv from 'dotenv';
-import path from 'path'; 
-
+import path from 'path';
 dotenv.config(); // Cargar variables de entorno desde el archivo .env
-
-// Importa URL desde module
-import { fileURLToPath } from 'url';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const port = process.env.PORT ?? 3000 //tomar el valor de la variable de entorno PORT, si no hay, el puerto será el 3000(normalmente utilizado para desarrollo)
 
@@ -70,10 +64,9 @@ io.on('connection', async (socket) => { //cuando el cliente se conecta, se ejecu
     })
 })
 
-app.use(express.static(path.join(__dirname, 'client'))); // Sirve archivos estáticos desde 'client'
-
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client', 'index.html'));
+    // Servir el archivo index.html desde la carpeta client en la raíz del proyecto
+    res.sendFile(path.join(process.cwd(), 'client', 'index.html'));
 });
   
 server.listen(port, () => { //escucha el puerto especificado para inicializar el servidor
