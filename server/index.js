@@ -4,8 +4,25 @@ import mongoose from 'mongoose'; //dependencia utilizada para la base de datos m
 import { Server } from 'socket.io' //se importa solo server del modulo, no todo el modulo
 import { createServer } from 'node:http'
 import dotenv from 'dotenv';
+import helmet from 'helmet';
 
 dotenv.config(); // Cargar variables de entorno desde el archivo .env
+
+// Configurar Content Security Policy (CSP) con helmet
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", "https://vercel.live"],
+            connectSrc: ["'self'", "https://vercel.live"],
+            imgSrc: ["'self'", "data:"],
+            styleSrc: ["'self'", "'unsafe-inline'"],
+            fontSrc: ["'self'", "https://fonts.gstatic.com"],
+            objectSrc: ["'none'"],
+            upgradeInsecureRequests: [],
+        },
+    },
+}));
 
 const port = process.env.PORT ?? 3000 //tomar el valor de la variable de entorno PORT, si no hay, el puerto será el 3000(normalmente utilizado para desarrollo)
 
