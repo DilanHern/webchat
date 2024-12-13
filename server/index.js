@@ -39,6 +39,12 @@ app.use(helmet({
     },
 }));
 
+app.use(
+    helmet({
+      contentSecurityPolicy: false,
+    })
+  );
+
 // Conectar el servidor a MongoDB
 const mongoUri = process.env.MONGODB_URI;
 mongoose.connect(mongoUri).then(()=> { //se establece una conexion con la base de datos llamada chatapp, que se encuentra en localhost, en el puerto 27017
