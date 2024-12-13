@@ -11,17 +11,6 @@ const port = process.env.PORT ?? 3000 //tomar el valor de la variable de entorno
 
 const app = express() //creamos la aplicacion express quien maneja las rutas, el middleware y configuraciones necesarias para manejar solicitudes http
 
-// Add CSP middleware
-app.use((req, res, next) => {
-    res.setHeader('Content-Security-Policy', 
-        "default-src 'self'; script-src 'self' https://vercel.live; " +
-        "script-src-elem 'self' https://vercel.live; connect-src 'self' https://vercel.live; " +
-        "img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; " +
-        "object-src 'none'; upgrade-insecure-requests;"
-    );
-    next();
-});
-
 const server = createServer(app) //creamos "server" que representa un servidor http creado a partir de la app Express, maneja las conexiones y solicitudes de red (http y websocket).
 //Debemos pasarle "app" para integrar la logica de rutas y middleware con el servidor http
 
@@ -75,10 +64,11 @@ io.on('connection', async (socket) => { //cuando el cliente se conecta, se ejecu
     })
 })
 
-app.get('/', (req, res) => { //cuando se llame al servidor (el cliente haga una solicitud get a la url especificada):
-    //se contestará al cliente con: donde se ha inicializado el proyecto + la ruta donde se encuentra el html
-    res.sendFile(process.cwd() + '/client/index.html') 
-})
+app.use(express.static(path.join(__dirname, 'client'))); // Sirve archivos estáticos desde 'client'
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'index.html'));
+});
   
 server.listen(port, () => { //escucha el puerto especificado para inicializar el servidor
     console.log(`Server running on port ${port}`)
