@@ -4,6 +4,7 @@ import mongoose from 'mongoose'; //dependencia utilizada para la base de datos m
 import { Server } from 'socket.io' //se importa solo server del modulo, no todo el modulo
 import { createServer } from 'node:http'
 import dotenv from 'dotenv';
+import path from 'path'; 
 
 dotenv.config(); // Cargar variables de entorno desde el archivo .env
 
