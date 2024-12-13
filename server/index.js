@@ -6,6 +6,11 @@ import { createServer } from 'node:http'
 import dotenv from 'dotenv';
 
 dotenv.config(); // Cargar variables de entorno desde el archivo .env
+// Middleware para agregar el encabezado CSP
+app.use((req, res, next) => {
+    res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' https://vercel.live; script-src-elem 'self' https://vercel.live; connect-src 'self' https://vercel.live; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; object-src 'none'; upgrade-insecure-requests;");
+    next();
+});
 
 const port = process.env.PORT ?? 3000 //tomar el valor de la variable de entorno PORT, si no hay, el puerto será el 3000(normalmente utilizado para desarrollo)
 
