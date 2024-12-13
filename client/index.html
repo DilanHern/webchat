@@ -14,33 +14,32 @@
         const input = document.getElementById('input'); // Obtener el campo de entrada de la web
         const messages = document.getElementById('messages'); //obtener la seccion de mensajes
 
-        //función para borrar automaticamente los mensajes si se exceden los 25
-        function verificarNumMensajes(messages) {
-            if (messages.children.length >= 25) { //si hay 25 mensajes
-                    messages.removeChild(messages.firstChild); // Eliminar el primer mensaje
-            }
-        }
-
         //la funcion socket.on recibe dos parametros: 
         //1. Un string que representa el nombre del evento que el cliente espera recibir
         //2. Una funcion de callback: Funcion que se ejecuta cuando se recibe el evento
         //manejar el limite de mensajes
         socket.on('chat message', (msg) => {
-            verificarNumMensajes(messages)
+            if (messages.children.length >= 25) { //si hay 25 mensajes
+                 messages.removeChild(messages.firstChild); // Eliminar el primer mensaje
+            }
             const item = `<li>${msg}</li>`
             messages.insertAdjacentHTML('beforeend', item) //antes que acabe el elemento, insertamos el item (se agrega a la lista de mensajes)
         })
 
 
         socket.on('connection', (id, msgs) => {
-            verificarNumMensajes(messages)
+            if (messages.children.length >= 25) { //si hay 25 mensajes
+                messages.removeChild(messages.firstChild); // Eliminar el primer mensaje
+            }
             let message; //declaracion de variable
             if (id === socket.id) { //se comprueba si el mensaje de conexión es del mismo usuario
                     message = 'You have connected';
                     //si se acaba de conectar el usuario: muestra los ultimos 25 mensajes escritos
                     
                     msgs.forEach((msg) => {
-                        verificarNumMensajes(messages)
+                        if (messages.children.length >= 25) { //si hay 25 mensajes
+                            messages.removeChild(messages.firstChild); // Eliminar el primer mensaje
+                        }
                         const item = `<li>${msg.content}</li>`
                         messages.insertAdjacentHTML('beforeend', item);
                     })
@@ -55,7 +54,9 @@
         })
 
         socket.on('disconnection', (id) => {
-            verificarNumMensajes(messages)
+            if (messages.children.length >= 25) { //si hay 25 mensajes
+                 messages.removeChild(messages.firstChild); // Eliminar el primer mensaje
+            }
             messages.insertAdjacentHTML('beforeend', `<li class="connection-message">An user has disconnected</li>`)
         })
 
