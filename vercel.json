@@ -11,12 +11,5 @@
       "src": "/(.*)",
       "dest": "/server/index.js"
     }
-  ],
-  "csp": {
-    "defaults": "* 'self'",
-    "additional": [
-      "frame-src 'self' https://vercel.live",
-      "script-src-elem 'self' https://vercel.live 'unsafe-inline'"
-    ]
-  }
+  ]
 }
