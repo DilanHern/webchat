@@ -5,18 +5,11 @@ import { Server } from 'socket.io' //se importa solo server del modulo, no todo 
 import { createServer } from 'node:http'
 import dotenv from 'dotenv';
 import path from 'path';
-import crypto from 'crypto';
-
 dotenv.config(); // Cargar variables de entorno desde el archivo .env
 
 const port = process.env.PORT ?? 3000 //tomar el valor de la variable de entorno PORT, si no hay, el puerto será el 3000(normalmente utilizado para desarrollo)
 
 const app = express() //creamos la aplicacion express quien maneja las rutas, el middleware y configuraciones necesarias para manejar solicitudes http
-// Middleware para generar un nonce
-app.use((req, res, next) => {
-    res.locals.nonce = crypto.randomBytes(16).toString('hex');
-    next();
-});
 
 const server = createServer(app) //creamos "server" que representa un servidor http creado a partir de la app Express, maneja las conexiones y solicitudes de red (http y websocket).
 //Debemos pasarle "app" para integrar la logica de rutas y middleware con el servidor http
