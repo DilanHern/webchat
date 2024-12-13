@@ -3,6 +3,9 @@ import logger from 'morgan' //dependencia utilizada para registrar informacion s
 import mongoose from 'mongoose'; //dependencia utilizada para la base de datos mongoDB
 import { Server } from 'socket.io' //se importa solo server del modulo, no todo el modulo
 import { createServer } from 'node:http'
+import dotenv from 'dotenv';
+
+dotenv.config(); // Cargar variables de entorno desde el archivo .env
 
 const port = process.env.PORT ?? 3000 //tomar el valor de la variable de entorno PORT, si no hay, el puerto será el 3000(normalmente utilizado para desarrollo)
 
@@ -19,7 +22,8 @@ const io = new Server(server, {
 app.use(logger('dev')) //usamos el logger morgan con el formato dev para registrar solicitudes
 
 // Conectar el servidor a MongoDB
-mongoose.connect('mongodb://localhost:27017/chatapp').then(()=> { //se establece una conexion con la base de datos llamada chatapp, que se encuentra en localhost, en el puerto 27017
+const mongoUri = process.env.MONGODB_URI;
+mongoose.connect(mongoUri).then(()=> { //se establece una conexion con la base de datos llamada chatapp, que se encuentra en localhost, en el puerto 27017
     console.log('Connected to MongoDB'); //si la conexion tiene exito, se imprime el mensaje en consola
 }).catch((err) => { //si hubo un error al conectarse
     console.error('Error connecting to MongoDB:', err); //se imprime el mensaje de error
@@ -63,7 +67,7 @@ app.get('/', (req, res) => { //cuando se llame al servidor (el cliente haga una 
     //se contestará al cliente con: donde se ha inicializado el proyecto + la ruta donde se encuentra el html
     res.sendFile(process.cwd() + '/client/index.html') 
 })
-
+  
 server.listen(port, () => { //escucha el puerto especificado para inicializar el servidor
     console.log(`Server running on port ${port}`)
 })
